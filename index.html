@@ -9,9 +9,16 @@
         .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 450px; margin: 0 auto; }
         h2 { text-align: center; color: #2c3e50; margin-top: 0; font-size: 22px; }
         .section { margin-bottom: 20px; }
+        
+        /* 단일 옵션 강조 박스 */
+        .premium-box { background-color: #e8f8f5; padding: 20px; border-radius: 12px; border: 2px solid #00b894; margin-bottom: 25px; text-align: center; }
+        .premium-title { color: #00b894; font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+        .premium-desc { font-size: 18px; font-weight: bold; color: #2d3436; }
+        .premium-point { display: inline-block; background: #00b894; color: white; font-size: 12px; padding: 4px 10px; border-radius: 20px; margin-top: 10px; font-weight: bold; }
+        
         .competitor-section { background-color: #fff3e0; padding: 15px; border-radius: 10px; border: 1px dashed #ffb86c; margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: bold; color: #34495e; font-size: 14px; }
-        input, select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+        input { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
         .input-group { display: flex; gap: 10px; margin-bottom: 5px; }
         
         .btn-calc { width: 100%; padding: 16px; background-color: #00b894; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0, 184, 148, 0.2); transition: 0.2s; }
@@ -26,26 +33,21 @@
         .comp-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #636e72; }
         .comp-item.ours { color: #d63031; font-size: 18px; font-weight: bold; margin-top: 12px; padding-top: 12px; border-top: 2px dashed #ff7675; }
         
-        /* 캔버스(도면) 디자인 */
-        .drawing-area { display: flex; flex-direction: column; align-items: center; margin-top: 20px; gap: 15px; }
-        .room-drawing { display: flex; flex-direction: column; align-items: center; background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; }
-        .room-label { font-size: 14px; font-weight: bold; color: #00b894; margin-bottom: 10px; }
-        canvas { background-color: #fdfdfd; max-width: 100%; height: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        /* 캔버스(크기비교) 디자인 */
+        .visual-compare-area { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #dfe6e9; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         
         .notice { font-size: 12px; color: #b2bec3; margin-top: 15px; line-height: 1.4; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>✨ 스마트 견적 & 통합 도면 비교기</h2>
+        <h2>✨ 스마트 견적 비교기</h2>
         
-        <div class="section">
-            <label>1. 시공할 우리 매트 선택 (1m x 1m)</label>
-            <select id="mat-type">
-                <option value="67000">옵션 B (2.2cm) - 장당 67,000원</option>
-                <option value="56500">옵션 C (1.7cm) - 장당 56,500원</option>
-                <option value="44000">신규 매트 (1cm) - 장당 44,000원</option>
-            </select>
+        <div class="premium-box">
+            <div class="premium-title">프리미엄 1m 퍼즐매트</div>
+            <div class="premium-desc">1,000 x 1,000mm (두께 1.7cm)</div>
+            <div style="font-size: 15px; color: #636e72; margin-top: 5px;">장당 <b>62,000</b>원</div>
+            <div class="premium-point">💡 1m 대형 사이즈로 이음새 최소화!</div>
         </div>
 
         <div class="competitor-section">
@@ -59,7 +61,7 @@
         </div>
 
         <div class="section">
-            <label>2. 거실 (단위: mm)</label>
+            <label>1. 거실 (단위: mm)</label>
             <div class="input-group">
                 <input type="number" id="w1" placeholder="가로 길이 (예: 4500)">
                 <input type="number" id="h1" placeholder="세로 길이 (예: 3200)">
@@ -67,7 +69,7 @@
         </div>
 
         <div class="section">
-            <label>3. 복도 (단위: mm)</label>
+            <label>2. 복도 (단위: mm)</label>
             <div class="input-group">
                 <input type="number" id="w2" placeholder="가로 길이">
                 <input type="number" id="h2" placeholder="세로 길이">
@@ -75,38 +77,36 @@
         </div>
 
         <div class="section">
-            <label>4. 주방 (단위: mm)</label>
+            <label>3. 주방 (단위: mm)</label>
             <div class="input-group">
                 <input type="number" id="w3" placeholder="가로 길이">
                 <input type="number" id="h3" placeholder="세로 길이">
             </div>
         </div>
 
-        <button class="btn-calc" onclick="calculate()">견적 및 시공 도면 확인</button>
+        <button class="btn-calc" onclick="calculate()">견적 및 크기 비교 확인하기</button>
 
         <div class="result-box" id="result-box">
-            <h3>📊 예상 견적 및 비교</h3>
+            <h3>📊 예상 견적 및 비교 결과</h3>
             <p id="total-info" style="margin: 0 0 15px 0; font-size: 15px; color: #2d3436; text-align: center; font-weight: bold;"></p>
             
             <div class="compare-box" id="compare-box"></div>
 
-            <h3 style="margin-top: 30px; font-size: 16px;">📐 1m 매트 통합 시공 도면</h3>
-            <div style="font-size: 12px; color: #636e72; text-align: center; margin-bottom: 10px;">(격자 1칸 = 1m 매트 1장)</div>
-            
-            <div class="drawing-area" id="drawing-area"></div>
+            <div id="visual-compare-container"></div>
 
             <button class="btn-copy" id="copy-btn" onclick="copyToClipboard()">
                 💬 카카오톡으로 결과 복사하기
             </button>
 
-            <p class="notice">※ 위 도면은 입력하신 치수를 바탕으로 결합한 단순화된 시공 예상도이며, 실제 집 구조(기둥, 꺾임 등)에 따라 다를 수 있습니다.<br>※ 견적은 로스율 10%를 포함한 예상치입니다.</p>
+            <p class="notice">※ 위 견적은 자투리(로스율) 10%를 포함한 단순 예상치이며, 공간 구조에 따라 차이가 있을 수 있습니다.</p>
         </div>
     </div>
 
     <script>
+        // 단일 옵션 가격 고정
+        const PRICE_PER_MAT = 62000;
+        
         function calculate() {
-            var pricePerMat = parseInt(document.getElementById('mat-type').value);
-            
             var w1 = parseFloat(document.getElementById('w1').value) || 0;
             var h1 = parseFloat(document.getElementById('h1').value) || 0;
             var area1 = (w1 / 1000) * (h1 / 1000);
@@ -127,20 +127,22 @@
             }
 
             var ourTotalCount = Math.ceil(totalArea * 1.1); 
-            var ourPrice = ourTotalCount * pricePerMat;
+            var ourPrice = ourTotalCount * PRICE_PER_MAT;
 
-            // 타사 매트 계산 (고객 입력값 - mm 단위)
             var compW = parseFloat(document.getElementById('comp-w').value) || 0;
             var compH = parseFloat(document.getElementById('comp-h').value) || 0;
             var compPrice = parseFloat(document.getElementById('comp-price').value) || 0;
             
             var compareHTML = "";
-            var copyText = "[퍼즐매트 시공 예상 견적]\n\n" +
+            var copyText = "[프리미엄 1m 퍼즐매트 예상 견적]\n\n" +
                            "■ 시공 총 면적: " + totalArea.toFixed(2) + " ㎡\n" +
-                           "■ 우리 매트(1m) 필요 수량: 약 " + ourTotalCount + "장\n\n";
+                           "■ 1m 대형 매트 필요 수량: 약 " + ourTotalCount + "장\n\n" +
+                           "✨ [1m 매트의 압도적 장점]\n" +
+                           "- 조각이 커서 이음새가 획기적으로 적습니다.\n" +
+                           "- 틈새 먼지/오염 스트레스 최소화!\n" +
+                           "- 바닥이 끊겨 보이지 않아 집이 훨씬 넓어 보입니다.\n\n";
 
             if (compW > 0 && compH > 0 && compPrice > 0) {
-                // mm -> m 변환하여 계산
                 var compAreaPerMat = (compW / 1000) * (compH / 1000);
                 var compTotalCount = Math.ceil((totalArea * 1.1) / compAreaPerMat);
                 var compTotalPrice = compTotalCount * compPrice;
@@ -153,12 +155,15 @@
                 
                 copyText += "[💡 타사 대비 견적 비교]\n" +
                             "❌ 타사 (" + compW + "x" + compH + "mm) 견적: " + compTotalPrice.toLocaleString() + "원\n" +
-                            "✅ 우리 매트 (1m) 견적: " + ourPrice.toLocaleString() + "원\n" +
+                            "✅ 1m 대형 매트 견적: " + ourPrice.toLocaleString() + "원\n" +
                             "👉 우리 매트로 시공 시 " + diffPrice.toLocaleString() + "원 절약 가능!\n\n";
+            } else {
+                // 타사 입력 안 했을 때 기본 문구
+                copyText += "✅ 우리 매트 (1m) 견적: " + ourPrice.toLocaleString() + "원\n\n";
             }
 
             compareHTML += `<div class="comp-item ours">
-                                <span>✅ 우리 매트 (1m)</span>
+                                <span>✅ 프리미엄 1m 매트</span>
                                 <span id="total-price">${ourPrice.toLocaleString()}원</span>
                             </div>`;
                             
@@ -168,105 +173,90 @@
             document.getElementById('compare-box').innerHTML = compareHTML;
             document.getElementById('copy-btn').setAttribute('data-copy', copyText);
             
-            // --- 통합 캔버스 도면 그리기 호출 ---
-            var drawingArea = document.getElementById('drawing-area');
-            drawingArea.innerHTML = ""; // 기존 도면 초기화
+            // --- 1m 매트 vs 타사 매트 크기 비교 캔버스 그리기 ---
+            var visualContainer = document.getElementById('visual-compare-container');
+            visualContainer.innerHTML = ""; // 초기화
             
-            drawCombinedCanvas(w1, h1, w2, h2, w3, h3, drawingArea);
+            if (compW > 0 && compH > 0) {
+                drawSizeComparison(compW, compH, visualContainer);
+            }
 
             document.getElementById('result-box').style.display = 'block';
         }
 
-        // [핵심 로직] 거실, 복도, 주방을 하나의 도면으로 합쳐서 그려주는 함수
-        function drawCombinedCanvas(w1, h1, w2, h2, w3, h3, container) {
-            // 입력된 공간만 배열로 모으기 (이름과 m 단위 길이)
-            var rooms = [];
-            if(w1 > 0 && h1 > 0) rooms.push({w: w1/1000, h: h1/1000, name: "거실"});
-            if(w2 > 0 && h2 > 0) rooms.push({w: w2/1000, h: h2/1000, name: "복도"});
-            if(w3 > 0 && h3 > 0) rooms.push({w: w3/1000, h: h3/1000, name: "주방"});
-
-            if(rooms.length === 0) return;
-
-            // 스마트폰 화면 비율을 고려한 축척 비율 (1m = 35px)
-            var scale = 35; 
-            var maxW = 0;
-            var totalH = 0;
-
-            // 통합 도면의 전체 너비(가장 넓은 곳)와 총 높이 계산
-            rooms.forEach(r => {
-                if(r.w > maxW) maxW = r.w;
-                totalH += r.h;
-            });
-
-            var canvasW = maxW * scale;
-            var canvasH = totalH * scale;
-
+        // [핵심 시각화 로직] 1m 매트와 타사 매트 크기 비교 그려주기
+        function drawSizeComparison(compW, compH, container) {
             var wrapper = document.createElement('div');
-            wrapper.className = 'room-drawing';
+            wrapper.className = 'visual-compare-area';
 
-            var label = document.createElement('div');
-            label.className = 'room-label';
-            label.innerText = "전체 공간 결합 평면도 (총 " + rooms.length + "구역)";
+            var title = document.createElement('h3');
+            title.innerText = "👀 매트 크기 직관적 비교";
+            title.style.fontSize = '16px';
+            title.style.margin = '0 0 5px 0';
+            title.style.color = '#00b894';
+
+            var ratio = (1000 * 1000) / (compW * compH);
+            var subtitle = document.createElement('div');
+            subtitle.style.fontSize = '13.5px';
+            subtitle.style.color = '#2d3436';
+            subtitle.style.marginBottom = '15px';
+            subtitle.style.textAlign = 'center';
+            subtitle.style.lineHeight = '1.5';
+            subtitle.innerHTML = "우리 매트 1장이면 타사 매트 <b>약 " + ratio.toFixed(1) + "장</b>을 덮습니다!<br><span style='color:#e17055; font-size:12px;'>(이음새가 획기적으로 줄어들어 청소가 편해집니다)</span>";
 
             var canvas = document.createElement('canvas');
-            canvas.width = canvasW;
-            canvas.height = canvasH;
+            var canvasSize = 260; // 스마트폰에 딱 맞는 너비
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
             var ctx = canvas.getContext('2d');
 
-            // 1. 전체 배경색 투명/흰색 처리
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, canvasW, canvasH);
+            // 1000mm를 200px로 축소하여 그립니다
+            var scale = 200 / 1000;
+            var ourPx = 1000 * scale; 
+            var compPxW = compW * scale;
+            var compPxH = compH * scale;
 
-            // 2. 각 공간의 색상을 칠하고, 텍스트 라벨 추가 (위에서부터 차례대로 쌓기)
-            var currentY = 0;
-            rooms.forEach(r => {
-                var rw = r.w * scale;
-                var rh = r.h * scale;
-                
-                // 공간 배경색
-                ctx.fillStyle = "#e8f8f5";
-                ctx.fillRect(0, currentY, rw, rh);
-                
-                // 공간 이름 글씨 쓰기
-                ctx.fillStyle = "#00b894";
-                ctx.font = "bold 14px 'Malgun Gothic'";
-                ctx.fillText(r.name, 10, currentY + 20);
+            // 정중앙에 배치하기 위한 오프셋
+            var offsetX = (canvasSize - ourPx) / 2;
+            var offsetY = (canvasSize - ourPx) / 2;
 
-                currentY += rh;
-            });
-
-            // 3. 도면 내부(공간 안)에만 1m 단위 격자 선 그리기
-            ctx.save();
-            ctx.beginPath();
-            var cY = 0;
-            rooms.forEach(r => {
-                ctx.rect(0, cY, r.w * scale, r.h * scale);
-                cY += r.h * scale;
-            });
-            ctx.clip(); // 매트가 깔리는 공간 안쪽으로만 펜의 영역을 제한하는 마법!
-
-            ctx.strokeStyle = "#b2bec3";
-            ctx.lineWidth = 0.5;
-            // 세로 선 (격자)
-            for(var x = 0; x < canvasW; x += scale) {
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvasH); ctx.stroke();
-            }
-            // 가로 선 (격자)
-            for(var y = 0; y < canvasH; y += scale) {
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasW, y); ctx.stroke();
-            }
-            ctx.restore();
-
-            // 4. 마지막으로 각 공간의 테두리를 진하게 다시 그려서 구분감 주기
-            var finalY = 0;
+            // 1. 우리 1m 매트 그리기 (크고 웅장하게)
+            ctx.fillStyle = "#e8f8f5";
+            ctx.fillRect(offsetX, offsetY, ourPx, ourPx);
             ctx.strokeStyle = "#00b894";
-            ctx.lineWidth = 2.5;
-            rooms.forEach(r => {
-                ctx.strokeRect(0, finalY, r.w * scale, r.h * scale);
-                finalY += r.h * scale;
-            });
+            ctx.lineWidth = 3;
+            ctx.strokeRect(offsetX, offsetY, ourPx, ourPx);
 
-            wrapper.appendChild(label);
+            ctx.fillStyle = "#00b894";
+            ctx.font = "bold 14px 'Malgun Gothic'";
+            ctx.fillText("우리 매트 (1m)", offsetX + 10, offsetY + 25);
+
+            // 2. 타사 매트 그리기 (우리 매트 좌측 하단에 겹쳐서 비교)
+            // 타사 매트가 1000mm 보다 클 경우는 거의 없겠지만 제한선 설정
+            if(compPxW > ourPx) compPxW = ourPx;
+            if(compPxH > ourPx) compPxH = ourPx;
+
+            var compX = offsetX;
+            var compY = offsetY + ourPx - compPxH;
+
+            ctx.fillStyle = "rgba(255, 118, 117, 0.8)";
+            ctx.fillRect(compX, compY, compPxW, compPxH);
+            ctx.strokeStyle = "#d63031";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(compX, compY, compPxW, compPxH);
+
+            ctx.fillStyle = "white";
+            ctx.font = "bold 12px 'Malgun Gothic'";
+            // 타사 매트가 너무 작으면 글씨를 바깥에, 아니면 안쪽에 씁니다
+            if (compPxW < 40 || compPxH < 20) {
+                ctx.fillStyle = "#d63031";
+                ctx.fillText("타사", compX, compY - 5);
+            } else {
+                ctx.fillText("타사", compX + 5, compY + 20);
+            }
+
+            wrapper.appendChild(title);
+            wrapper.appendChild(subtitle);
             wrapper.appendChild(canvas);
             container.appendChild(wrapper);
         }
