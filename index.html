@@ -28,16 +28,16 @@
         
         /* 캔버스(도면) 디자인 */
         .drawing-area { display: flex; flex-direction: column; align-items: center; margin-top: 20px; gap: 15px; }
-        .room-drawing { display: flex; flex-direction: column; align-items: center; background: white; padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; }
-        .room-label { font-size: 13px; font-weight: bold; color: #00b894; margin-bottom: 5px; }
-        canvas { border: 2px solid #2d3436; background-color: #fdfdfd; max-width: 100%; height: auto; }
+        .room-drawing { display: flex; flex-direction: column; align-items: center; background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; }
+        .room-label { font-size: 14px; font-weight: bold; color: #00b894; margin-bottom: 10px; }
+        canvas { background-color: #fdfdfd; max-width: 100%; height: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         
         .notice { font-size: 12px; color: #b2bec3; margin-top: 15px; line-height: 1.4; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>✨ 스마트 견적 & 도면 비교기</h2>
+        <h2>✨ 스마트 견적 & 통합 도면 비교기</h2>
         
         <div class="section">
             <label>1. 시공할 우리 매트 선택 (1m x 1m)</label>
@@ -50,10 +50,10 @@
 
         <div class="competitor-section">
             <label>🤔 타 업체와 비교해볼까요? (선택)</label>
-            <div style="font-size:12px; color:#e17055; margin-bottom:8px;">고민 중인 타사의 매트 사이즈와 가격을 적어주세요.</div>
+            <div style="font-size:12px; color:#e17055; margin-bottom:8px;">고민 중인 타사의 매트 사이즈(mm)와 가격을 적어주세요.</div>
             <div class="input-group">
-                <input type="number" id="comp-w" placeholder="가로 (예: 50cm)">
-                <input type="number" id="comp-h" placeholder="세로 (예: 50cm)">
+                <input type="number" id="comp-w" placeholder="가로 (예: 500)">
+                <input type="number" id="comp-h" placeholder="세로 (예: 500)">
             </div>
             <input type="number" id="comp-price" placeholder="타사 장당 가격 (예: 15000원)" style="margin-top:5px;">
         </div>
@@ -88,10 +88,9 @@
             <h3>📊 예상 견적 및 비교</h3>
             <p id="total-info" style="margin: 0 0 15px 0; font-size: 15px; color: #2d3436; text-align: center; font-weight: bold;"></p>
             
-            <div class="compare-box" id="compare-box">
-                </div>
+            <div class="compare-box" id="compare-box"></div>
 
-            <h3 style="margin-top: 30px; font-size: 16px;">📐 1m 매트 시공 예상도</h3>
+            <h3 style="margin-top: 30px; font-size: 16px;">📐 1m 매트 통합 시공 도면</h3>
             <div style="font-size: 12px; color: #636e72; text-align: center; margin-bottom: 10px;">(격자 1칸 = 1m 매트 1장)</div>
             
             <div class="drawing-area" id="drawing-area"></div>
@@ -100,7 +99,7 @@
                 💬 카카오톡으로 결과 복사하기
             </button>
 
-            <p class="notice">※ 위 도면은 직사각형 기준의 단순화된 시공 예상도이며, 실제 집 구조(기둥, 싱크대 등)에 따라 자투리 재단이 필요합니다.<br>※ 견적은 로스율 10%를 포함한 예상치입니다.</p>
+            <p class="notice">※ 위 도면은 입력하신 치수를 바탕으로 결합한 단순화된 시공 예상도이며, 실제 집 구조(기둥, 꺾임 등)에 따라 다를 수 있습니다.<br>※ 견적은 로스율 10%를 포함한 예상치입니다.</p>
         </div>
     </div>
 
@@ -127,11 +126,10 @@
                 return;
             }
 
-            // 우리 매트(1m x 1m) 계산
             var ourTotalCount = Math.ceil(totalArea * 1.1); 
             var ourPrice = ourTotalCount * pricePerMat;
 
-            // 타사 매트 계산 (고객 입력값)
+            // 타사 매트 계산 (고객 입력값 - mm 단위)
             var compW = parseFloat(document.getElementById('comp-w').value) || 0;
             var compH = parseFloat(document.getElementById('comp-h').value) || 0;
             var compPrice = parseFloat(document.getElementById('comp-price').value) || 0;
@@ -141,21 +139,20 @@
                            "■ 시공 총 면적: " + totalArea.toFixed(2) + " ㎡\n" +
                            "■ 우리 매트(1m) 필요 수량: 약 " + ourTotalCount + "장\n\n";
 
-            // 타사 정보가 모두 입력되었을 경우에만 비교 실행
             if (compW > 0 && compH > 0 && compPrice > 0) {
-                // 타사 매트 장당 면적 (단위 변환 cm -> m)
-                var compAreaPerMat = (compW / 100) * (compH / 100);
+                // mm -> m 변환하여 계산
+                var compAreaPerMat = (compW / 1000) * (compH / 1000);
                 var compTotalCount = Math.ceil((totalArea * 1.1) / compAreaPerMat);
                 var compTotalPrice = compTotalCount * compPrice;
                 var diffPrice = compTotalPrice - ourPrice;
                 
                 compareHTML += `<div class="comp-item">
-                                    <span>🔍 타사 (${compW}x${compH}cm)</span>
+                                    <span>🔍 타사 (${compW}x${compH}mm)</span>
                                     <span>약 ${compTotalCount}장 / <b>${compTotalPrice.toLocaleString()}원</b></span>
                                 </div>`;
                 
                 copyText += "[💡 타사 대비 견적 비교]\n" +
-                            "❌ 타사 (" + compW + "x" + compH + "cm) 견적: " + compTotalPrice.toLocaleString() + "원\n" +
+                            "❌ 타사 (" + compW + "x" + compH + "mm) 견적: " + compTotalPrice.toLocaleString() + "원\n" +
                             "✅ 우리 매트 (1m) 견적: " + ourPrice.toLocaleString() + "원\n" +
                             "👉 우리 매트로 시공 시 " + diffPrice.toLocaleString() + "원 절약 가능!\n\n";
             }
@@ -171,60 +168,103 @@
             document.getElementById('compare-box').innerHTML = compareHTML;
             document.getElementById('copy-btn').setAttribute('data-copy', copyText);
             
-            // --- 캔버스 도면 그리기 ---
+            // --- 통합 캔버스 도면 그리기 호출 ---
             var drawingArea = document.getElementById('drawing-area');
             drawingArea.innerHTML = ""; // 기존 도면 초기화
             
-            if(w1 > 0 && h1 > 0) drawRoomCanvas(w1, h1, "거실", drawingArea);
-            if(w2 > 0 && h2 > 0) drawRoomCanvas(w2, h2, "복도", drawingArea);
-            if(w3 > 0 && h3 > 0) drawRoomCanvas(w3, h3, "주방", drawingArea);
+            drawCombinedCanvas(w1, h1, w2, h2, w3, h3, drawingArea);
 
             document.getElementById('result-box').style.display = 'block';
         }
 
-        // 도면을 그려주는 마법의 함수
-        function drawRoomCanvas(w_mm, h_mm, roomName, container) {
-            var w_m = w_mm / 1000;
-            var h_m = h_mm / 1000;
-            
-            // 스마트폰 화면에 들어가도록 1m를 40픽셀로 축소 (비율 유지)
-            var scale = 40; 
-            var canvasW = w_m * scale;
-            var canvasH = h_m * scale;
+        // [핵심 로직] 거실, 복도, 주방을 하나의 도면으로 합쳐서 그려주는 함수
+        function drawCombinedCanvas(w1, h1, w2, h2, w3, h3, container) {
+            // 입력된 공간만 배열로 모으기 (이름과 m 단위 길이)
+            var rooms = [];
+            if(w1 > 0 && h1 > 0) rooms.push({w: w1/1000, h: h1/1000, name: "거실"});
+            if(w2 > 0 && h2 > 0) rooms.push({w: w2/1000, h: h2/1000, name: "복도"});
+            if(w3 > 0 && h3 > 0) rooms.push({w: w3/1000, h: h3/1000, name: "주방"});
+
+            if(rooms.length === 0) return;
+
+            // 스마트폰 화면 비율을 고려한 축척 비율 (1m = 35px)
+            var scale = 35; 
+            var maxW = 0;
+            var totalH = 0;
+
+            // 통합 도면의 전체 너비(가장 넓은 곳)와 총 높이 계산
+            rooms.forEach(r => {
+                if(r.w > maxW) maxW = r.w;
+                totalH += r.h;
+            });
+
+            var canvasW = maxW * scale;
+            var canvasH = totalH * scale;
 
             var wrapper = document.createElement('div');
             wrapper.className = 'room-drawing';
-            
+
             var label = document.createElement('div');
             label.className = 'room-label';
-            label.innerText = roomName + " (" + w_m.toFixed(2) + "m x " + h_m.toFixed(2) + "m)";
-            
+            label.innerText = "전체 공간 결합 평면도 (총 " + rooms.length + "구역)";
+
             var canvas = document.createElement('canvas');
             canvas.width = canvasW;
             canvas.height = canvasH;
             var ctx = canvas.getContext('2d');
 
-            // 배경 그리기
-            ctx.fillStyle = "#e8f8f5";
+            // 1. 전체 배경색 투명/흰색 처리
+            ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvasW, canvasH);
-            
-            // 1m 단위(40px)로 격자(매트) 선 그리기
-            ctx.strokeStyle = "#b2bec3";
-            ctx.lineWidth = 1;
 
-            // 세로선 그리기
-            for(var x = scale; x < canvasW; x += scale) {
+            // 2. 각 공간의 색상을 칠하고, 텍스트 라벨 추가 (위에서부터 차례대로 쌓기)
+            var currentY = 0;
+            rooms.forEach(r => {
+                var rw = r.w * scale;
+                var rh = r.h * scale;
+                
+                // 공간 배경색
+                ctx.fillStyle = "#e8f8f5";
+                ctx.fillRect(0, currentY, rw, rh);
+                
+                // 공간 이름 글씨 쓰기
+                ctx.fillStyle = "#00b894";
+                ctx.font = "bold 14px 'Malgun Gothic'";
+                ctx.fillText(r.name, 10, currentY + 20);
+
+                currentY += rh;
+            });
+
+            // 3. 도면 내부(공간 안)에만 1m 단위 격자 선 그리기
+            ctx.save();
+            ctx.beginPath();
+            var cY = 0;
+            rooms.forEach(r => {
+                ctx.rect(0, cY, r.w * scale, r.h * scale);
+                cY += r.h * scale;
+            });
+            ctx.clip(); // 매트가 깔리는 공간 안쪽으로만 펜의 영역을 제한하는 마법!
+
+            ctx.strokeStyle = "#b2bec3";
+            ctx.lineWidth = 0.5;
+            // 세로 선 (격자)
+            for(var x = 0; x < canvasW; x += scale) {
                 ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvasH); ctx.stroke();
             }
-            // 가로선 그리기
-            for(var y = scale; y < canvasH; y += scale) {
+            // 가로 선 (격자)
+            for(var y = 0; y < canvasH; y += scale) {
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvasW, y); ctx.stroke();
             }
+            ctx.restore();
 
-            // 테두리 강조
+            // 4. 마지막으로 각 공간의 테두리를 진하게 다시 그려서 구분감 주기
+            var finalY = 0;
             ctx.strokeStyle = "#00b894";
-            ctx.lineWidth = 3;
-            ctx.strokeRect(0, 0, canvasW, canvasH);
+            ctx.lineWidth = 2.5;
+            rooms.forEach(r => {
+                ctx.strokeRect(0, finalY, r.w * scale, r.h * scale);
+                finalY += r.h * scale;
+            });
 
             wrapper.appendChild(label);
             wrapper.appendChild(canvas);
