@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>퍼즐매트 스마트 견적기</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; padding: 20px; margin: 0; background-color: #f4f7f6; }
+        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 400px; margin: 0 auto; }
+        h2 { text-align: center; color: #2c3e50; margin-top: 0; }
+        .section { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #34495e; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+        .input-group { display: flex; gap: 10px; }
+        button { width: 100%; padding: 16px; background-color: #00b894; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px rgba(0, 184, 148, 0.2); }
+        button:hover { background-color: #00a884; }
+        .result-box { margin-top: 25px; padding: 20px; background-color: #e8f8f5; border-left: 5px solid #00b894; border-radius: 8px; display: none; }
+        .result-box h3 { margin: 0 0 10px 0; color: #00b894; }
+        .result-price { color: #d63031; font-size: 22px; font-weight: bold; margin: 10px 0 0 0; }
+        .notice { font-size: 12px; color: #7f8c8d; margin-top: 15px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>✨ 매트 견적 계산기</h2>
+        
+        <div class="section">
+            <label>1. 시공할 매트 종류 선택</label>
+            <select id="mat-type">
+                <option value="67000">옵션 B (2.2cm) - 장당 67,000원</option>
+                <option value="56500">옵션 C (1.7cm) - 장당 56,500원</option>
+                <option value="44000">신규 매트 (1cm) - 장당 44,000원</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <label>2. 거실 (단위: m)</label>
+            <div class="input-group">
+                <input type="number" id="w1" placeholder="가로 (예: 4.5)">
+                <input type="number" id="h1" placeholder="세로 (예: 3.2)">
+            </div>
+        </div>
+
+        <div class="section">
+            <label>3. 복도 (단위: m)</label>
+            <div class="input-group">
+                <input type="number" id="w2" placeholder="가로">
+                <input type="number" id="h2" placeholder="세로">
+            </div>
+        </div>
+
+        <div class="section">
+            <label>4. 주방 (단위: m)</label>
+            <div class="input-group">
+                <input type="number" id="w3" placeholder="가로">
+                <input type="number" id="h3" placeholder="세로">
+            </div>
+        </div>
+
+        <button onclick="calculate()">견적 확인하기</button>
+
+        <div class="result-box" id="result-box">
+            <h3>계산 결과</h3>
+            <p id="total-area" style="margin: 5px 0; color: #333;"></p>
+            <p id="total-count" style="margin: 5px 0; color: #333;"></p>
+            <p class="result-price" id="total-price"></p>
+            <p class="notice">※ 위 견적은 자투리(로스율 10%)를 포함한 1m 매트 기준 예상치이며, 실제 시공 환경에 따라 차이가 발생할 수 있습니다.</p>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            var pricePerMat = parseInt(document.getElementById('mat-type').value);
+            var w1 = parseFloat(document.getElementById('w1').value) || 0;
+            var h1 = parseFloat(document.getElementById('h1').value) || 0;
+            var area1 = w1 * h1;
+            var w2 = parseFloat(document.getElementById('w2').value) || 0;
+            var h2 = parseFloat(document.getElementById('h2').value) || 0;
+            var area2 = w2 * h2;
+            var w3 = parseFloat(document.getElementById('w3').value) || 0;
+            var h3 = parseFloat(document.getElementById('h3').value) || 0;
+            var area3 = w3 * h3;
+
+            var totalArea = area1 + area2 + area3;
+            
+            if (totalArea === 0) {
+                alert("가로, 세로 길이를 한 곳 이상 입력해주세요.");
+                return;
+            }
+
+            var totalCount = Math.ceil(totalArea * 1.1); 
+            var totalPrice = totalCount * pricePerMat;
+
+            document.getElementById('total-area').innerText = "총 시공 면적: " + totalArea.toFixed(2) + " ㎡";
+            document.getElementById('total-count').innerText = "필요 수량: 약 " + totalCount + "장";
+            document.getElementById('total-price').innerText = "예상 견적: " + totalPrice.toLocaleString() + "원";
+            document.getElementById('result-box').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
